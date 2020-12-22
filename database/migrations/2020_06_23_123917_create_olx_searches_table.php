@@ -4,11 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTrackedOlxSearchesTable extends Migration
+class CreateOlxSearchesTable extends Migration
 {
     public function up()
     {
-        Schema::create('tracked_olx_searches', function (Blueprint $table) {
+        Schema::create('olx_searches', function (Blueprint $table) {
             $table->id();
             $table->string('url', 500)->unique();
             $table->integer('tracked_pages_amount')->nullable();
@@ -22,6 +22,6 @@ class CreateTrackedOlxSearchesTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('tracked_olx_searches');
+        Schema::dropIfExists('olx_searches');
     }
 }

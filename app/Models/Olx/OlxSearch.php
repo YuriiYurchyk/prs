@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Olx;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -12,20 +12,30 @@ use Illuminate\Database\Eloquent\Model;
 // updated_at
 // active
 
-class TrackedOlxSearch extends Model
+/**
+ * Class TrackedOlxSearch
+ * @package App\Models
+ *
+ * @var OlxAd olxAds
+ */
+class OlxSearch extends Model // todo OlxSearch
 {
     protected $dates = [
         'deleted_at',
         'last_tracked_at',
     ];
 
-    // todo validate url
     protected $fillable = [
         'url',
         'active',
         'last_tracked_at',
         'tracking_interval', // minutes
     ];
+
+    public function olxAds()
+    {
+        return $this->belongsToMany(OlxAd::class, 'olx_search_olx_ad');
+    }
 
     public function isNeedTrack(): bool
     {

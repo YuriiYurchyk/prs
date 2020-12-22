@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Models\OlxAd;
-use App\Models\TrackedOlxSearch;
+use App\Models\Olx\OlxAd;
+use App\Models\Olx\OlxSearch;
 use App\Parsers\Olx\SearchResultsIterator;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
@@ -16,10 +16,10 @@ class ParsingAdUrlsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private TrackedOlxSearch $trackedOlxSearch;
-    private Carbon           $now;
+    private OlxSearch $trackedOlxSearch;
+    private Carbon    $now;
 
-    public function __construct(TrackedOlxSearch $url)
+    public function __construct(OlxSearch $url)
     {
         $this->trackedOlxSearch = $url;
         $this->now              = Carbon::now();
@@ -32,17 +32,36 @@ class ParsingAdUrlsJob implements ShouldQueue
         do {
             $resultBlockParser = $searchResultIterator->getResultBlockParser();
             $url               = $resultBlockParser->getUrl();
-            $ad                = OlxAd::firstOrNewByUrl($url);
+            $ad                = $this->trackedOlxSearch->olxAds()->firstWhere('url', '=', $url);
+            if ($ad) {
+                $ad->update([
+                    'title'          => $resultBlockParser->getTitle(),
+                    'price'          => $resultBlockParser->getPrice(),
+                    'currency'       => $resultBlockParser->getCurrency(),
+                    'publication_at' => $resultBlockParser->getPublicationDate(),
+                    'last_active_at' => $this->now,
+                ]);
+            }
 
-            $ad->fill([
-                'url'            => $url,
-                'title'          => $resultBlockParser->getTitle(),
-                'price'          => $resultBlockParser->getPrice(),
-                'currency'       => $resultBlockParser->getCurrency(),
-                'publication_at' => $resultBlockParser->getPublicationDate(),
-                'last_active_at' => $this->now,
-            ]);
-            $ad->save();
+            if (!$ad) {
+                $ad = OlxAd::firstOrNew(['url' => $url]);
+                $ad->fill([
+                    // todo перевіряти зміни назви оголошення, ціни, валюти, дати публікації
+                    //  і уже потім при парсингу оголошення перевіряти дескріпшен
+
+                    /*
+                     * як варіант можна зробити json колонки в базі
+                     * і в джейсоні зберігати дату зміни і значення, на яке змінились дані
+                     */
+                    'title'          => $resultBlockParser->getTitle(),
+                    'price'          => $resultBlockParser->getPrice(),
+                    'currency'       => $resultBlockParser->getCurrency(),
+                    'publication_at' => $resultBlockParser->getPublicationDate(),
+                    'last_active_at' => $this->now,
+                ]);
+                $this->trackedOlxSearch->olxAds()->save($ad);
+
+            }
 
         } while ($searchResultIterator->next());
 

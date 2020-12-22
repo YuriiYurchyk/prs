@@ -9,7 +9,7 @@ class TrackedOlxSearchesTableSeeder extends Seeder
     {
         $now = Carbon::now();
 
-        DB::table('tracked_olx_searches')->truncate();
+        DB::table('olx_searches')->truncate();
 
         $data = [
             [
@@ -21,6 +21,6 @@ class TrackedOlxSearchesTableSeeder extends Seeder
             ],
         ];
 
-        DB::table('tracked_olx_searches')->insert($data);
+        DB::table('olx_searches')->insert($data);
     }
 }

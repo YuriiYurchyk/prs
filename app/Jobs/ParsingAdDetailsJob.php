@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\TrackedOlxSearch;
+use App\Models\Olx\OlxSearch;
 use App\Parsers\Olx\SearchResultsIterator;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
@@ -15,7 +15,7 @@ class ParsingAdDetailsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(TrackedOlxSearch $trackedOlxSearch)
+    public function __construct(OlxSearch $trackedOlxSearch)
     {
 
     }

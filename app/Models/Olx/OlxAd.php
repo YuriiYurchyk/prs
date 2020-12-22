@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Olx;
 
 // todo добавить колонку катерогии
 //  добавить колонку избранные
 
+use App\Models\AttributeChangeLog;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -29,13 +30,17 @@ class OlxAd extends Model
         'publication_at',
         'last_active_at',
         'not_found_at',
+        'tracked_olx_searches',
     ];
 
-    public static function firstOrNewByUrl($url): self
+    public function olxSearches()
     {
-        $obj = static::where('url', $url)->firstOrNew();
+        return $this->belongsToMany(OlxSearch::class, 'olx_search_olx_ad');
+    }
 
-        return $obj;
+    public function attributeLogs(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    {
+        return $this->morphMany(AttributeChangeLog::class, 'logable');
     }
 
 }

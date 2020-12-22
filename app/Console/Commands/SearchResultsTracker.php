@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\ParsingAdUrlsJob;
-use App\Models\TrackedOlxSearch;
+use App\Models\Olx\OlxSearch;
 use Illuminate\Console\Command;
 
 class SearchResultsTracker extends Command
@@ -19,9 +19,9 @@ class SearchResultsTracker extends Command
 
     public function handle()
     {
-        $trackedSearchUrls = TrackedOlxSearch::active()->get();
+        $trackedSearchUrls = OlxSearch::active()->get();
 
-        /** @var TrackedOlxSearch $trackedSearchUrl */
+        /** @var OlxSearch $trackedSearchUrl */
         foreach ($trackedSearchUrls as $trackedSearchUrl) {
 
             if ($trackedSearchUrl->isNeedTrack()) {
