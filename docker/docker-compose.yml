@@ -1,0 +1,45 @@
+version: '3'
+services:
+  nginx:
+    build:
+      context: ./nginx
+    volumes:
+      - ../:/var/www
+    ports:
+      - "8081:80"
+    links:
+      - php-fpm
+  php-fpm:
+    build:
+      context: ./php-fpm
+    volumes:
+      - ../:/var/www
+      - ../storage/logs:/var/log
+    links:
+#      - postgres
+      - mysql
+  mysql:
+    image: mysql:8
+#    command: --innodb_use_native_aio=0
+    volumes:
+      - ../storage/docker/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_DATABASE}
+    ports:
+      - ${DB_PORT}:3306
+
+#  postgres:
+#    image: postgres:13.0
+#    volumes:
+#      - pgdata:/var/lib/postgresql/data
+#    environment:
+#      - POSTGRES_DB=${DB_DATABASE}
+#      - POSTGRES_USER=${DB_USERNAME}
+#      - POSTGRES_PASSWORD=${DB_PASSWORD}
+#    ports:
+#      - ${DB_PORT}:5432
+#volumes:
+#  pgdata:
