@@ -22,6 +22,6 @@ class ParsingAdDetailsJob implements ShouldQueue
 
     public function handle()
     {
-
+        return true;
     }
 }

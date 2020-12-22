@@ -11,11 +11,11 @@ class CreateOlxAdsTable extends Migration
         Schema::create('olx_ads', function (Blueprint $table) {
             $table->id();
             $table->string('url', 500)->unique();
-            $table->string('name', 100);
-            $table->integer('price');
-            $table->string('currency', 10);
-            $table->text('description');
-            $table->boolean('favorite')->default(0);
+            $table->string('title', 100);
+            $table->integer('price')->nullable();
+            $table->string('currency', 10)->nullable();
+            $table->text('description')->nullable();
+            $table->boolean('favorite')->default(false);
             $table->dateTime('publication_at');
             $table->dateTime('last_active_at');
             $table->dateTime('not_found_at')->nullable();

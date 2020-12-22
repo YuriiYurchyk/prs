@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Jobs\ParsingAdUrlsJob;
 use App\Models\TrackedOlxSearch;
 use Illuminate\Console\Command;
-use Illuminate\Foundation\Bus\DispatchesJobs;
 
 class SearchResultsTracker extends Command
 {
@@ -24,9 +23,11 @@ class SearchResultsTracker extends Command
 
         /** @var TrackedOlxSearch $trackedSearchUrl */
         foreach ($trackedSearchUrls as $trackedSearchUrl) {
+
             if ($trackedSearchUrl->isNeedTrack()) {
                 ParsingAdUrlsJob::dispatch($trackedSearchUrl);
             }
+
         }
 
         return true;

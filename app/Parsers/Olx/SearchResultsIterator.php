@@ -29,9 +29,9 @@ class SearchResultsIterator
             return false;
         }
 
-        $this->currentResultKey = 0;
-        $this->searchResultUrls = $this->searchPaginator->parseResultUrls();
-
+        $this->currentResultKey         = 0;
+        $this->searchResultUrls         = $this->searchPaginator->parseResultUrls();
+        $this->searchResultNodeCrawlers = $this->searchPaginator->parseResultNodeCrawlers();
         return true;
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\OlxAd;
 use App\Models\TrackedOlxSearch;
 use App\Parsers\Olx\SearchResultsIterator;
 use Carbon\Carbon;
@@ -16,36 +17,34 @@ class ParsingAdUrlsJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     private TrackedOlxSearch $trackedOlxSearch;
-    private Carbon           $nowDate;
+    private Carbon           $now;
 
     public function __construct(TrackedOlxSearch $url)
     {
         $this->trackedOlxSearch = $url;
-        $this->nowDate          = Carbon::now();
+        $this->now              = Carbon::now();
     }
 
     public function handle()
     {
-        return true;
-
-        if (!$this->trackedOlxSearch->isNeedTrack()) {
-            return true;
-        }
-
         $searchResultIterator = new SearchResultsIterator($this->trackedOlxSearch->url);
 
-        $dates = [];
         do {
-//            $resultPageParser  = $searchResultIterator->getResultPageParser();
             $resultBlockParser = $searchResultIterator->getResultBlockParser();
-            $dates[]           = $resultBlockParser->getLocation();
+            $url               = $resultBlockParser->getUrl();
+            $ad                = OlxAd::firstOrNewByUrl($url);
 
-//            break;
+            $ad->fill([
+                'url'            => $url,
+                'title'          => $resultBlockParser->getTitle(),
+                'price'          => $resultBlockParser->getPrice(),
+                'currency'       => $resultBlockParser->getCurrency(),
+                'publication_at' => $resultBlockParser->getPublicationDate(),
+                'last_active_at' => $this->now,
+            ]);
+            $ad->save();
+
         } while ($searchResultIterator->next());
-
-//        if ($trackedSearchUrl->isAllPagesTracked()) {
-//            // тут не проставляєм not found
-//        }
 
     }
 }
