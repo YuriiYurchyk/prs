@@ -6,6 +6,16 @@ use App\Models\Olx\OlxAd;
 
 class OlxAdObserver
 {
+    private $loggedAttributes = [
+        'title',
+        'price',
+        'currency',
+        'description',
+        'publication_at',
+        'not_found_at',
+        'category',
+    ];
+
     /**
      * Handle the olx ad "created" event.
      *
@@ -14,28 +24,8 @@ class OlxAdObserver
      */
     public function created(OlxAd $olxAd)
     {
-        $loggedAttributes = [
-            'title',
-            'price',
-            'currency',
-            'description',
-            'publication_at',
-            'not_found_at',
-            'category'
-        ];
+        $this->createAttributeChangeLogs($olxAd);
 
-        $changedAttributes = [];
-        foreach ($loggedAttributes as $attribute) {
-            if (empty($olxAd->$attribute)) {
-                continue;
-            }
-            $changedAttributes[] = [
-                'attribute' => $attribute,
-                'value'     => $olxAd->$attribute
-            ];
-        }
-
-        $olxAd->attributeLogs()->createMany($changedAttributes);
     }
 
     /**
@@ -47,6 +37,7 @@ class OlxAdObserver
     public function updated(OlxAd $olxAd)
     {
         $this->createAttributeChangeLogs($olxAd);
+
     }
 
     public function creating(OlxAd $olxAd)
@@ -94,18 +85,8 @@ class OlxAdObserver
 
     private function createAttributeChangeLogs(OlxAd $olxAd)
     {
-        $loggedAttributes = [
-            'title',
-            'price',
-            'currency',
-            'description',
-            'publication_at',
-            'not_found_at',
-            'category'
-        ];
-
         $changedAttributes = [];
-        foreach ($loggedAttributes as $attribute) {
+        foreach ($this->loggedAttributes as $attribute) {
             if (!$olxAd->isDirty($attribute) || empty($olxAd->$attribute)) {
                 continue;
             }

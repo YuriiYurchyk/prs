@@ -35,10 +35,10 @@ class SearchResultsIterator
         return true;
     }
 
-    public function getResultPageParser(): ResultPageParser
+    public function getResultPageParser(): AdPageParser
     {
         $url    = $this->getUrl();
-        $parser = new ResultPageParser($url);
+        $parser = new AdPageParser($url);
 
         return $parser;
     }

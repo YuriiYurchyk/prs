@@ -2,11 +2,11 @@
 
 namespace App\Parsers\Olx;
 
-use App\Classes\WebPages;
+use App\Services\WebPages;
 use Carbon\Carbon;
 use Symfony\Component\DomCrawler\Crawler;
 
-class ResultPageParser
+class AdPageParser
 {
     protected Crawler $crawler;
 

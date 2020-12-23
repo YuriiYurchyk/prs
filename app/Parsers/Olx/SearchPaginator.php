@@ -2,7 +2,7 @@
 
 namespace App\Parsers\Olx;
 
-use App\Classes\WebPages;
+use App\Services\WebPages;
 use Symfony\Component\DomCrawler\Crawler;
 
 class SearchPaginator

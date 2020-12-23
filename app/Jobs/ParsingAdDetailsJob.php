@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Models\Olx\OlxSearch;
-use App\Parsers\Olx\SearchResultsIterator;
+use App\Models\Olx\OlxAd;
+use App\Parsers\Olx\AdPageParser;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,13 +15,19 @@ class ParsingAdDetailsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(OlxSearch $trackedOlxSearch)
-    {
+    private Carbon $now;
+    private OlxAd  $olxAd;
 
+    public function __construct(OlxAd $olxAd)
+    {
+        $this->now   = Carbon::now();
+        $this->olxAd = $olxAd;
     }
 
     public function handle()
     {
+        $this->adPageParser = new AdPageParser($this->olxAd->url);
+
         return true;
     }
 }

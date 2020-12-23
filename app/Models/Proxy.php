@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Proxy extends Model
 {
+    // todo proxy checker
     protected $table = 'proxies';
     protected $fillable = [
         'id',

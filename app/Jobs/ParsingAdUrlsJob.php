@@ -16,13 +16,13 @@ class ParsingAdUrlsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private OlxSearch $trackedOlxSearch;
-    private Carbon    $now;
+    private Carbon                $now;
+    private OlxSearch             $trackedOlxSearch;
 
-    public function __construct(OlxSearch $url)
+    public function __construct(OlxSearch $olxSearch)
     {
-        $this->trackedOlxSearch = $url;
-        $this->now              = Carbon::now();
+        $this->now                  = Carbon::now();
+        $this->trackedOlxSearch     = $olxSearch;
     }
 
     public function handle()
@@ -41,18 +41,10 @@ class ParsingAdUrlsJob implements ShouldQueue
                     'publication_at' => $resultBlockParser->getPublicationDate(),
                     'last_active_at' => $this->now,
                 ]);
-            }
 
-            if (!$ad) {
+            } else {
                 $ad = OlxAd::firstOrNew(['url' => $url]);
                 $ad->fill([
-                    // todo перевіряти зміни назви оголошення, ціни, валюти, дати публікації
-                    //  і уже потім при парсингу оголошення перевіряти дескріпшен
-
-                    /*
-                     * як варіант можна зробити json колонки в базі
-                     * і в джейсоні зберігати дату зміни і значення, на яке змінились дані
-                     */
                     'title'          => $resultBlockParser->getTitle(),
                     'price'          => $resultBlockParser->getPrice(),
                     'currency'       => $resultBlockParser->getCurrency(),
@@ -60,7 +52,6 @@ class ParsingAdUrlsJob implements ShouldQueue
                     'last_active_at' => $this->now,
                 ]);
                 $this->trackedOlxSearch->olxAds()->save($ad);
-
             }
 
         } while ($searchResultIterator->next());

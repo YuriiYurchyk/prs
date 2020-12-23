@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Classes;
+namespace App\Services;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\TransferStats;
@@ -40,21 +40,26 @@ class WebPages
         $client        = new Client();
         $redirectedUrl = '';
         $res           = $client->request('GET', $url, [
-//            'proxy'   => self::getRandomProxy(),
-//            'headers' => [ // тут треба проставляти усі заголовки, імітуючи браузер
-//                           'User-Agent' => self::getRandomUserAgent(),
-//            ],
-                'on_stats' => function (TransferStats $stats) use (&$redirectedUrl) {
-                    $redirectedUrl = (string)$stats->getEffectiveUri();
-                },
+            'on_stats' => function (TransferStats $stats) use (&$redirectedUrl) {
+                $redirectedUrl = (string)$stats->getEffectiveUri();
+            },
+            //            'proxy'   => self::getRandomProxy(),
+            //            'headers' => [ // тут треба проставляти усі заголовки, імітуючи браузер
+            //                           'User-Agent' => self::getRandomUserAgent(),
+            //            ],
         ]);
 
-        if (trim($url, '/') != trim($redirectedUrl, '/')) {
+        if (self::isPageNotFound($url, $redirectedUrl)) {
             return self::PAGE_NOT_FOUND;
         }
 
         $pageBody = (string)$res->getBody();
 
         return $pageBody;
+    }
+
+    private static function isPageNotFound($url, $redirectedUrl)
+    {
+        return trim($url, '/') != trim($redirectedUrl, '/');
     }
 }
