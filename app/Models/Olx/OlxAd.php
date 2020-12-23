@@ -2,11 +2,7 @@
 
 namespace App\Models\Olx;
 
-// todo добавить колонку катерогии
-//  добавить колонку избранные
-
 use App\Models\AttributeChangeLog;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class OlxAd extends Model
@@ -19,8 +15,6 @@ class OlxAd extends Model
         'not_found_at',
     ];
 
-    // динаміку зміни ціни можна зберігати в json разом з датою зміни
-
     protected $fillable = [
         'url',
         'title',
@@ -30,7 +24,7 @@ class OlxAd extends Model
         'publication_at',
         'last_active_at',
         'not_found_at',
-        'tracked_olx_searches',
+        'category',
     ];
 
     public function olxSearches()
@@ -40,7 +34,7 @@ class OlxAd extends Model
 
     public function attributeLogs(): \Illuminate\Database\Eloquent\Relations\MorphMany
     {
-        return $this->morphMany(AttributeChangeLog::class, 'logable');
+        return $this->morphMany(AttributeChangeLog::class, 'attribute_change_logable');
     }
 
 }

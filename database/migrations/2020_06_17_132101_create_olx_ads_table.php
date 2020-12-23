@@ -12,6 +12,7 @@ class CreateOlxAdsTable extends Migration
             $table->id();
             $table->string('url', 500)->unique();
             $table->string('title', 100);
+            $table->string('category', 100)->nullable();
             $table->integer('price')->nullable();
             $table->string('currency', 10)->nullable();
             $table->text('description')->nullable();
