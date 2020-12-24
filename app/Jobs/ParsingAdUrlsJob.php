@@ -4,7 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Olx\OlxAd;
 use App\Models\Olx\OlxSearch;
-use App\Parsers\Olx\SearchResultsIterator;
+use App\Services\Parsers\Olx\SearchResultsIterator;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

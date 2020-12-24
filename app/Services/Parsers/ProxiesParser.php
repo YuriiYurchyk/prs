@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Parsers;
+namespace App\Services\Parsers;
 
 class ProxiesParser
 {

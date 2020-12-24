@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Parsers\Olx;
+namespace App\Services\Parsers\Olx;
 
 use App\Services\WebPages;
 use Carbon\Carbon;

@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Olx\OlxAd;
-use App\Parsers\Olx\AdPageParser;
+use App\Services\Parsers\Olx\AdPageParser;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

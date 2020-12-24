@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Parsers\Olx;
+namespace App\Services\Parsers\Olx;
 
 class SearchResultsIterator
 {
